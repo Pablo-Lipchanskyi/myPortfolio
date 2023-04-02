@@ -1,43 +1,71 @@
-import React, { useEffect, useState } from "react";
-import Particle from "./Particle";
+import React from 'react';
+import Particle from './Particle';
 
 const ParticleBackground = () => {
-  const [particles, setParticles] = useState([]);
+  const canvasRef = React.useRef(null);
+  const [particles, setParticles] = React.useState([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const context = canvas.getContext('2d');
+
     const particleNum = 1000;
     const maxRange = 1000;
     const minRange = maxRange / 2;
     const maxRadius = 25;
 
-    const particles = [...Array(particleNum)].map((_, index) => {
+    const createParticle = () => {
       const x = Math.random() * maxRange - minRange;
       const y = Math.random() * maxRange - minRange;
-      const size = Math.random() * maxRadius + 1;
-      const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      const radius = Math.random() * maxRadius + 1;
+      const hue = Math.random() * 360;
+      const lightness = Math.random() * 50 + 50;
 
-      return { x, y, size, color, key: index };
-    });
+      return { x, y, radius, hue, lightness };
+    };
 
-    setParticles(particles);
+    const updateParticles = () => {
+      setParticles((prevParticles) =>
+        prevParticles.map((particle) => {
+          let { x, y } = particle;
+
+          x += Math.sin(y / 10) * 2;
+          y += Math.sin(x / 10) * 2;
+
+          return { ...particle, x, y };
+        })
+      );
+
+      requestAnimationFrame(updateParticles);
+    };
+
+    const initialParticles = Array.from({ length: particleNum }, createParticle);
+
+    setParticles(initialParticles);
+    updateParticles();
+
+    return () => {
+      cancelAnimationFrame(updateParticles);
+    };
   }, []);
 
   return (
-    <div
+    <canvas
+      ref={canvasRef}
       style={{
-        position: "absolute",
+        position: 'fixed',
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100%",
-        background: "linear-gradient(to top, #1CB5E0, #000046)",
-        overflow: "hidden",
+        zIndex: -1,
       }}
     >
-      {particles.map(({ x, y, size, color, key }) => (
-        <Particle key={key} x={x} y={y} size={size} color={color} />
+      {particles.map((particle, index) => (
+        <Particle key={index} {...particle} />
       ))}
-    </div>
+    </canvas>
   );
 };
 

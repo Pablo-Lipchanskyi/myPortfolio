@@ -1,21 +1,19 @@
-import React from "react";
+import React from 'react';
 
-const Particle = ({ x, y, size, color }) => {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: y,
-        left: x,
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: color,
-        opacity: 0.7,
-        pointerEvents: "none",
-      }}
-    />
-  );
+const Particle = ({ x, y, radius, hue, lightness }) => {
+  const canvasRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    context.beginPath();
+    context.arc(x, y, radius, 0, 2 * Math.PI);
+    context.fillStyle = `hsl(${hue}, 50%, ${lightness}%)`;
+    context.fill();
+  }, [x, y, radius, hue, lightness]);
+
+  return <canvas ref={canvasRef} />;
 };
 
 export default Particle;
