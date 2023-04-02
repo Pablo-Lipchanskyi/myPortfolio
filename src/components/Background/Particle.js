@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-const Particle = ({ x, y, size, hue }) => {
+const Particle = ({ x, y, size, color }) => {
   return (
     <div
       style={{
-        position: 'absolute',
-        left: x,
+        position: "absolute",
         top: y,
+        left: x,
         width: size,
         height: size,
-        borderRadius: '50%',
-        background: `hsla(${hue}, 70%, 50%, 0.8)`,
-        filter: 'blur(5px)',
-        pointerEvents: 'none',
+        borderRadius: "50%",
+        background: color,
+        opacity: 0.7,
+        pointerEvents: "none",
       }}
     />
   );

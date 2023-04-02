@@ -1,9 +1,9 @@
-import Background from "./Background/Background";
+import ParticleBackground from "./Background/ParticleBackground";
 
 export const App = () => {
   return (
     <>
-        <Background/>
+        <ParticleBackground/>
     </>
   );
 };
