@@ -79,13 +79,14 @@ const Background = () => {
     };
 
     setParticles(Array.from({ length: maxParticles }, createParticle));
-    drawParticles();
+      drawParticles();
+      updateParticles();
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [particles]);
 
   return <canvas className="background" ref={canvasRef} />;
 };
